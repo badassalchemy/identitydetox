@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Identity Detox — The Baddie Society</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08050F;--bgMid:#0F0818;--dark:#0A041A;--darkMid:#140828;
+  --lav:#CFAEDC;--pink:#FA9CE0;--mag:#E14DA8;
+  --txt:#F0E8F8;--txtSec:#D4C0E8;--txtMuted:#A888C8;--txtFaded:#7A5898;--txtQuiet:#5A3878;
+  --border:rgba(207,174,220,0.12);--card:rgba(20,8,40,0.85);
+  --shadow:rgba(225,77,168,0.08);
+  --pink-grad:linear-gradient(135deg,#E14DA8,#FA9CE0);
+  --lav-grad:linear-gradient(135deg,#CFAEDC,#FA9CE0);
+}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--txtSec);min-height:100vh}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:rgba(207,174,220,0.2)}
+input,textarea{color-scheme:dark;font-family:'Montserrat',sans-serif}
+button{cursor:pointer}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;background:var(--dark);min-height:200px;text-align:center;padding:44px 24px 32px}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:180%;height:180%;background:radial-gradient(circle at 60% 40%,rgba(225,77,168,0.07),transparent 55%);pointer-events:none}
+.hero-inner{position:relative}
+.hero-eyebrow{font-size:8px;font-weight:700;letter-spacing:1.8px;color:var(--mag);text-transform:uppercase;margin-bottom:10px}
+.hero h1{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:30px;color:var(--txt);line-height:1.2}
+.hero h1 em{color:var(--pink);font-style:italic;font-weight:400}
+.hero p{font-size:12px;color:var(--txtMuted);margin-top:10px;line-height:1.7;max-width:400px;margin-left:auto;margin-right:auto}
+
+/* PROGRESS BAR */
+.progress-bar{background:var(--dark);padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.progress-label{font-size:8px;font-weight:700;color:var(--txtQuiet);letter-spacing:1px;text-transform:uppercase;flex-shrink:0}
+.progress-track{flex:1;height:4px;background:rgba(207,174,220,0.1);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;border-radius:2px;background:var(--pink-grad);transition:width .5s}
+.progress-pct{font-size:9px;font-weight:700;color:var(--mag);flex-shrink:0}
+
+/* DAY TABS */
+.day-tabs{position:sticky;top:0;z-index:100;background:rgba(8,5,15,0.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex}
+.day-tab{flex:1;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:14px 10px 12px;border:none;background:none;color:var(--txtQuiet);border-bottom:2px solid transparent;transition:color .2s;text-align:center}
+.day-tab.active{color:var(--mag);border-bottom-color:var(--mag)}
+.day-tab-sub{font-size:8px;margin-top:2px;color:var(--txtFaded)}
+.day-tab.active .day-tab-sub{color:var(--pink)}
+
+/* MAIN */
+.main{max-width:680px;margin:0 auto;padding:28px 20px 80px}
+
+/* DAY HEADER */
+.day-header{position:relative;overflow:hidden;background:var(--dark);border-radius:14px;border:1px solid var(--border);margin-bottom:20px;padding:28px 24px}
+.day-header canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.day-header-inner{position:relative}
+.day-eyebrow{font-size:8px;font-weight:700;letter-spacing:1.8px;color:var(--mag);text-transform:uppercase;margin-bottom:8px}
+.day-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--txt);line-height:1.2;margin-bottom:12px}
+.day-title em{color:var(--pink);font-style:italic}
+.day-intro{font-size:13px;color:var(--txtSec);line-height:1.75}
+
+/* SECTION LABEL */
+.section-label{display:flex;align-items:center;gap:8px;margin-bottom:12px;margin-top:24px}
+.section-label span{font-size:9px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase}
+.section-label.video span{color:var(--mag)}
+.section-label.exercise span{color:var(--lav)}
+
+/* VIDEO PLAYER */
+.video-player{margin-bottom:12px;border-radius:14px;border:1px solid var(--border);background:var(--card);overflow:hidden}
+.video-header{display:flex;align-items:center;gap:10px;padding:13px 16px}
+.video-icon{font-size:16px}
+.video-meta{flex:1}
+.video-meta-label{font-size:11px;font-weight:700;color:var(--lav)}
+.video-meta-url{font-size:9px;color:var(--txtQuiet);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px;margin-top:1px}
+.video-edit-btn{font-size:9px;font-weight:700;padding:5px 12px;border-radius:50px;border:1px solid var(--border);background:transparent;color:var(--lav);transition:all .2s}
+.video-edit-btn.active{color:var(--mag);border-color:var(--mag)}
+.video-input-row{padding:14px 16px;border-top:1px solid var(--border);background:rgba(207,174,220,0.03)}
+.video-input-hint{font-size:9px;color:var(--txtMuted);margin-bottom:8px}
+.video-input-wrap{display:flex;gap:8px}
+.video-url-input{flex:1;font-size:12px;color:var(--txt);background:rgba(207,174,220,0.06);border:1px solid var(--border);border-radius:8px;padding:9px 12px;outline:none}
+.video-save-btn{font-size:11px;font-weight:700;color:#fff;background:var(--pink-grad);border:none;border-radius:8px;padding:9px 18px}
+.video-error{font-size:10px;color:var(--mag);margin-top:6px}
+.video-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden}
+.video-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+.video-watch-btn{display:block;text-align:center;text-decoration:none;padding:14px;background:var(--pink-grad);color:#fff;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:.5px}
+.video-watch-btn:hover{filter:brightness(1.1)}
+.video-empty{padding:20px 16px;text-align:center}
+.video-empty p{font-size:12px;color:var(--txtFaded);margin-bottom:4px}
+.video-empty small{font-size:10px;color:var(--txtQuiet)}
+
+/* EXERCISE CARD */
+.ex-card{margin-bottom:10px;border-radius:14px;border:1px solid var(--border);background:var(--card);overflow:hidden;transition:border-color .2s}
+.ex-card.open{border-color:var(--lav);box-shadow:0 0 20px rgba(207,174,220,0.1)}
+.ex-header{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer}
+.ex-check{width:24px;height:24px;border-radius:50%;flex-shrink:0;background:rgba(207,174,220,0.08);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:10px;font-weight:700;color:#fff}
+.ex-check.done{background:var(--pink-grad);border-color:var(--mag)}
+.ex-title{flex:1;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:700;color:var(--txt)}
+.ex-card.open .ex-title{color:var(--lav)}
+.ex-arrow{font-size:11px;color:var(--txtQuiet)}
+.ex-body{padding:0 18px 18px}
+
+/* EXERCISE CONTENT */
+.ex-prompt{font-size:13px;color:var(--txtSec);line-height:1.75;margin-bottom:12px}
+.ex-journal-prompt{font-size:13px;color:var(--pink);line-height:1.75;font-style:italic;margin-bottom:12px}
+.ex-textarea{width:100%;font-size:13px;color:var(--txt);background:rgba(207,174,220,0.06);border:1px solid var(--border);border-radius:10px;padding:12px 16px;outline:none;resize:vertical;line-height:1.7;margin-top:4px}
+.ex-input{width:100%;font-size:13px;color:var(--txt);background:rgba(207,174,220,0.06);border:1px solid var(--border);border-radius:8px;padding:10px 14px;outline:none}
+.save-btn{margin-top:14px;font-size:11px;font-weight:700;color:#fff;background:var(--pink-grad);border:none;border-radius:50px;padding:9px 22px;box-shadow:0 4px 16px rgba(225,77,168,0.25);transition:all .2s}
+.save-btn.saved{background:rgba(207,174,220,0.3);box-shadow:none}
+
+/* LIST ITEMS */
+.num-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.num-badge{width:28px;height:28px;border-radius:50%;background:var(--pink-grad);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.stem-row{display:flex;align-items:center;gap:12px;background:rgba(207,174,220,0.04);padding:10px 14px;border-radius:10px;border:1px solid var(--border);margin-bottom:8px}
+.stem-label{font-size:13px;color:var(--lav);min-width:200px;flex-shrink:0}
+.stem-input{flex:1;font-size:13px;color:var(--txt);background:transparent;border:none;outline:none;font-family:'Montserrat',sans-serif}
+
+/* REFRAME */
+.reframe-header{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.reframe-col-h{padding:8px 14px;border-radius:8px;text-align:center;font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}
+.reframe-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+
+/* FILL BLANKS */
+.fill-box{padding:18px 20px;background:rgba(207,174,220,0.05);border-radius:12px;border:1px solid var(--border);margin-top:12px}
+.fill-sentence{font-size:13px;color:var(--txtSec);line-height:1.75;font-style:italic;margin-bottom:16px}
+.fill-sentence em{color:var(--pink);font-style:normal}
+.fill-field-label{font-size:8px;font-weight:700;letter-spacing:1.2px;color:var(--txtQuiet);text-transform:uppercase;margin-bottom:4px}
+
+/* MANTRAS */
+.mantra-row{display:flex;align-items:center;gap:12px;background:rgba(207,174,220,0.06);border-radius:10px;border:1px solid var(--border);padding:10px 14px;margin-bottom:8px}
+.mantra-bullet{color:var(--lav);font-size:13px;flex-shrink:0}
+.mantra-input{flex:1;font-size:13px;color:var(--txt);background:transparent;border:none;outline:none;font-family:'Montserrat',sans-serif}
+
+/* VALUES */
+.values-selected{margin-bottom:12px;padding:12px 16px;background:rgba(207,174,220,0.08);border-radius:10px;border:1px solid var(--border);display:none}
+.values-selected.show{display:block}
+.values-selected-label{font-size:8px;font-weight:700;letter-spacing:1.2px;color:var(--mag);text-transform:uppercase;margin-bottom:8px}
+.values-tags{display:flex;flex-wrap:wrap;gap:6px}
+.value-tag{font-size:11px;padding:4px 10px;border-radius:50px;cursor:pointer;transition:all .15s}
+.value-tag.top5{background:var(--pink-grad);color:#fff;border:1px solid var(--mag)}
+.value-tag.extra{background:rgba(207,174,220,0.15);color:var(--lav);border:1px solid var(--border)}
+.values-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.value-chip{font-size:11px;padding:5px 10px;border-radius:50px;cursor:pointer;transition:all .15s;background:rgba(207,174,220,0.05);color:var(--txtMuted);border:1px solid var(--border)}
+.value-chip.selected{background:rgba(207,174,220,0.2);color:var(--lav);border-color:var(--lav)}
+
+/* HINT BOX */
+.hint-box{margin-top:14px;padding:14px 16px;background:rgba(225,77,168,0.06);border-radius:10px;border:1px solid rgba(225,77,168,0.15);font-size:12px;color:var(--txtSec)}
+.hint-box.lav{background:rgba(207,174,220,0.06);border-color:var(--border)}
+
+/* DECLARATION */
+.declaration-starter{font-size:13px;color:var(--pink);font-style:italic;margin-bottom:8px}
+
+/* UPSELL */
+.upsell-box{margin-top:14px;padding:14px 16px;background:var(--pink-grad);border-radius:10px;text-align:center;font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:#fff;letter-spacing:.5px}
+
+/* EXAMPLES */
+.examples-toggle{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--lav);background:rgba(207,174,220,0.1);border:1px solid var(--border);border-radius:50px;padding:7px 16px;margin-top:14px}
+.examples-list{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.example-item{background:rgba(207,174,220,0.05);border-radius:10px;border:1px solid var(--border);padding:12px 16px}
+.example-title{font-size:12px;font-weight:700;color:var(--lav);margin-bottom:4px}
+.example-body{font-size:12px;color:var(--txtMuted);line-height:1.6}
+
+/* NAV */
+.day-nav{display:flex;justify-content:space-between;margin-top:24px;gap:12px}
+.nav-prev{font-size:12px;font-weight:700;color:var(--lav);background:transparent;border:1.5px solid var(--lav);border-radius:50px;padding:10px 22px}
+.nav-next{margin-left:auto;font-size:12px;font-weight:700;color:#fff;background:var(--pink-grad);border:none;border-radius:50px;padding:10px 22px;box-shadow:0 4px 16px rgba(225,77,168,0.3)}
+
+/* COMPLETE */
+.complete-card{margin-top:24px;position:relative;overflow:hidden;background:var(--dark);border-radius:14px;border:1px solid var(--lav);padding:32px 24px;text-align:center;box-shadow:0 0 40px rgba(207,174,220,0.15)}
+.complete-card canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.complete-inner{position:relative}
+.complete-accent{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:var(--pink);margin-bottom:12px;letter-spacing:1px}
+.complete-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:var(--txt);line-height:1.3;margin-bottom:10px}
+.complete-title em{color:var(--pink);font-style:italic}
+.complete-body{font-size:13px;color:var(--txtSec);line-height:1.7;margin-bottom:20px}
+.complete-sig{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--lav);text-transform:uppercase}
+
+/* FOOTER */
+.footer{background:var(--dark);padding:12px 24px;text-align:center;border-top:1px solid var(--border);font-size:8px;font-weight:700;letter-spacing:1.2px;color:var(--txtQuiet);text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">The Baddie Society · Identity Detox</div>
+    <h1>Identity Detox<br><em>Rewire Your Mind</em></h1>
+    <p>3 days. Surface the patterns. Release the beliefs. Declare the woman you're becoming.</p>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <span class="progress-label">Progress</span>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  <span class="progress-pct" id="progress-pct">0/10 · 0%</span>
+</div>
+
+<div class="day-tabs" id="day-tabs"></div>
+<div class="main" id="main-content"></div>
+<div class="footer">@badass_alchemy · The Baddie Society on Skool</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────
+const DAYS = [
+  {
+    id:"day1", title:"Day 1", subtitle:"Shedding the Survival Identity",
+    tag:"WHO AM I WITHOUT THE ARMOR?",
+    intro:"Before we build the new, we have to see what's actually here. Not who you're supposed to be. Not who you've been performing as. Who you actually are — patterns, power, and all.",
+    videos:[
+      {id:"d1-intro", type:"intro", label:"Day 1 Intro — Shedding the Survival Identity"},
+      {id:"d1-med", type:"meditation", label:"Day 1 Activation Meditation"},
+    ],
+    exercises:[
+      {id:"d1e1", title:"Exercise 1 — My Disempowering Patterns", type:"journal",
+        prompt:"Think about situations in your life right now that disempower you. Things people say or do that make you feel small. Ways you abandon yourself to keep the peace. Write them all down without filtering.",
+        journalPrompt:"Where in my life am I still giving my power away? In relationships? Business? Family? My own inner dialogue?",
+        examples:[
+          {title:"Agreeing to things you don't actually want to do",body:"Saying yes to plans, projects, or conversations because you don't want to disappoint someone — even though your body is already saying no."},
+          {title:"Second-guessing yourself after you speak",body:"Sharing an idea, boundary, or truth... then replaying the conversation later, wondering if you were \"too much,\" \"too direct,\" or \"should've said it differently.\""},
+          {title:"Staying quiet to keep the peace",body:"Holding back your real thoughts or feelings because it feels easier than dealing with discomfort, conflict, or being misunderstood."},
+          {title:"Letting other people's moods dictate your energy",body:"Feeling smaller, tense, or off after interacting with someone who is dismissive, critical, or emotionally unavailable."},
+          {title:"Shrinking your desires to seem reasonable",body:"Downplaying what you actually want — more freedom, more money, more space — so you don't feel judged or \"too ambitious.\""},
+        ]
+      },
+      {id:"d1e2", title:"Exercise 2 — 5 Things That Actually Define Me", type:"list5",
+        prompt:"Not what other people believe about you. Not the roles you play. What do YOU believe defines who you are at your core? Write 5 things."},
+      {id:"d1e3", title:"Exercise 3 — The Pattern I'm Retiring", type:"fillblanks",
+        prompt:"Complete this sentence:",
+        fields:["The pattern","It has cost me","I am now choosing"]},
+    ]
+  },
+  {
+    id:"day2", title:"Day 2", subtitle:"The Belief Detox",
+    tag:"WHAT'S REALLY STOPPING ME?",
+    intro:"Your patterns are rooted in beliefs. And most of those beliefs were handed to you — by your family, your culture, your earliest experiences. Today we excavate them, test them, and start replacing them.",
+    videos:[
+      {id:"d2-intro", type:"intro", label:"Day 2 Intro — The Belief Detox"},
+      {id:"d2-med", type:"meditation", label:"Day 2 Belief Clearing Meditation"},
+    ],
+    exercises:[
+      {id:"d2e1", title:"Exercise 1 — The Belief Excavation", type:"completions",
+        prompt:"Complete these sentences without thinking too hard. Write the first thing that comes up:",
+        stems:["Money is...","I am...","Successful women...","I don't deserve...","People like me...","I can't have what I want because...","When I ask for more I..."]},
+      {id:"d2e2", title:"Exercise 2 — The Origin Hunt", type:"journal",
+        prompt:"Pick your top 3 limiting beliefs from above. For each one, ask — where did this come from? Who said it first? Is it actually true, or is it inherited?"},
+      {id:"d2e3", title:"Exercise 3 — The Belief vs Fact Test", type:"journal",
+        prompt:"For each limiting belief ask — is this a fact or is this a story? What is the actual evidence this belief is true? What is the evidence it isn't?"},
+      {id:"d2e4", title:"Exercise 4 — The Belief Reframe Chart", type:"reframe",
+        prompt:"Write your top 5 limiting beliefs on the left. On the right write the exact opposite as your new ideal belief. Make it bold. Make it true enough to be believable."},
+      {id:"d2e5", title:"Exercise 5 — The 21 Day Declaration", type:"declaration21",
+        prompt:"Choose your top 3 new ideal beliefs. Write them as I AM statements. Record yourself saying them out loud. Play it back every morning for 21 days."},
+    ]
+  },
+  {
+    id:"day3", title:"Day 3", subtitle:"The Identity Activation",
+    tag:"WHO AM I BECOMING?",
+    intro:"You've shed the old. You've cleared the beliefs. Now we build the new. This is where you stop trying to become her and start declaring that you already are.",
+    videos:[
+      {id:"d3-intro", type:"intro", label:"Day 3 Intro — The Identity Activation"},
+      {id:"d3-med", type:"activation", label:"Final Activation — Your Higher Self Meditation"},
+    ],
+    exercises:[
+      {id:"d3e1", title:"Exercise 1 — My Top 5 Core Values", type:"corevalues",
+        prompt:"From the list below, circle every value that resonates. Then narrow to your top 10. Then your top 5. These are your non-negotiables. The queen you're becoming makes every decision through these."},
+      {id:"d3e2", title:"Exercise 2 — The 5 Mantras Activation", type:"mantras",
+        prompt:"Write out your 5 personal mantras — declarations about who you are becoming. Say them out loud right now. Record yourself. This is your daily practice.",
+        defaults:["I trust myself more than I trust fear","I decide what stays and goes","I move with clarity not permission","I honor my intuition and act on it","I am safe to take up space and succeed"]},
+      {id:"d3e3", title:"Exercise 3 — My Identity Declaration", type:"declaration",
+        prompt:"This is the most important thing you will write in this entire detox. Write a full paragraph describing who you are — present tense, bold, unapologetic. Not who you're trying to be. Who you ARE.",
+        starter:"I am a woman who..."},
+      {id:"d3e4", title:"Exercise 4 — The Letter to My Old Self", type:"journal",
+        prompt:"Write a short goodbye letter to the version of you that started this detox 3 days ago. Thank her for keeping you safe. And tell her she can rest now. You've got it from here."},
+      {id:"d3e5", title:"Exercise 5 — My Next Step Declaration", type:"nextstep",
+        prompt:"Complete this sentence:",
+        fields:["Go deeper into","I am committing to"],
+        upsell:"This naturally leads her toward the Quantum Queen container."},
+    ]
+  }
+];
+
+const VALUES = ["Abundance","Acceptance","Accomplishment","Accountability","Achievement","Adaptability","Adventure","Affection","Ambition","Assertiveness","Authenticity","Awareness","Balance","Beauty","Boldness","Bravery","Brilliance","Calmness","Capable","Caring","Certainty","Challenge","Charity","Clarity","Commitment","Community","Compassion","Confidence","Consistency","Contribution","Courage","Creativity","Curiosity","Decisiveness","Dedication","Determination","Dignity","Discipline","Diversity","Empathy","Energy","Enthusiasm","Equality","Excellence","Excitement","Exploration","Faith","Family","Fearless","Fidelity","Focus","Forgiveness","Freedom","Friendship","Fun","Generosity","Grace","Gratitude","Growth","Happiness","Harmony","Health","Honesty","Honor","Humility","Imagination","Independence","Individuality","Inner Harmony","Innovation","Integrity","Intelligence","Intuitive","Joy","Justice","Kindness","Knowledge","Leadership","Learning","Love","Loyalty","Mastery","Meaning","Motivation","Openness","Optimism","Organization","Originality","Passion","Patience","Peace","Playfulness","Positivity","Power","Productivity","Prosperity","Purpose","Quality","Respect","Responsibility","Security","Self-reliance","Self-respect","Sensitivity","Serenity","Service","Simplicity","Sincerity","Spirituality","Strength","Success","Support","Sustainability","Thankful","Thoughtful","Tolerance","Tranquility","Transparency","Trustworthy","Uniqueness","Unity","Vision","Vitality","Wealth","Wisdom"];
+
+// ── STATE ────────────────────────────────────────────────
+let activeDay = 0;
+let activeEx = null;
+let state = JSON.parse(localStorage.getItem('id-detox-state') || '{}');
+// state shape: { saved:{}, completed:{}, videos:{}, values:{} }
+if (!state.saved) state.saved = {};
+if (!state.completed) state.completed = {};
+if (!state.videos) state.videos = {};
+if (!state.values) state.values = {};
+
+function saveState() { localStorage.setItem('id-detox-state', JSON.stringify(state)); }
+
+// ── STARS ────────────────────────────────────────────────
+function drawStars(canvas, count) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || canvas.parentElement.offsetWidth;
+  canvas.height = canvas.offsetHeight || 200;
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+  for (let i=0;i<count;i++){
+    ctx.beginPath();
+    ctx.arc(Math.random()*W,Math.random()*H,Math.random()*1.1+0.2,0,Math.PI*2);
+    ctx.fillStyle = Math.random()>.7?'#CFAEDC':'#fff';
+    ctx.globalAlpha = Math.random()*.6+.2;
+    ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  const g=ctx.createRadialGradient(W*.7,H*.3,0,W*.7,H*.3,W*.4);
+  g.addColorStop(0,'rgba(207,174,220,0.07)');g.addColorStop(1,'transparent');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+}
+
+// ── PROGRESS ─────────────────────────────────────────────
+function updateProgress() {
+  const total = DAYS.reduce((a,d)=>a+d.exercises.length,0);
+  const done = Object.keys(state.completed).filter(k=>state.completed[k]).length;
+  const pct = Math.round((done/total)*100);
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-pct').textContent = done+'/'+total+' · '+pct+'%';
+}
+
+// ── VIDEO HELPERS ─────────────────────────────────────────
+function getEmbedUrl(raw) {
+  if (!raw) return null;
+  const yt = raw.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+  if (yt) return 'https://www.youtube.com/embed/'+yt[1];
+  const vm = raw.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (vm) return 'https://player.vimeo.com/video/'+vm[1]+'?color=E14DA8&title=0&byline=0&portrait=0';
+  const lm = raw.match(/loom\.com\/share\/([a-zA-Z0-9]+)/);
+  if (lm) return 'https://www.loom.com/embed/'+lm[1];
+  if (raw.includes('embed')) return raw;
+  return null;
+}
+const videoIcons = {intro:'🎬',meditation:'🧘‍♀️',activation:'✨'};
+
+function renderVideoPlayer(v) {
+  const savedUrl = state.videos[v.id] || '';
+  const embedUrl = getEmbedUrl(savedUrl);
+  const icon = videoIcons[v.type]||'🎬';
+  return `
+  <div class="video-player" id="vp-${v.id}">
+    <div class="video-header">
+      <span class="video-icon">${icon}</span>
+      <div class="video-meta">
+        <div class="video-meta-label">${v.label}</div>
+        ${savedUrl ? `<div class="video-meta-url" id="vurl-${v.id}">${savedUrl}</div>` : ''}
+      </div>
+      <button class="video-edit-btn" onclick="toggleVideoEdit('${v.id}')" id="veditbtn-${v.id}">
+        ${savedUrl ? '✎ Edit' : '+ Add Video'}
+      </button>
+    </div>
+    <div class="video-input-row" id="vinput-${v.id}" style="display:none;border-top:1px solid var(--border)">
+      <div class="video-input-hint">Paste a YouTube, Vimeo, or Loom URL</div>
+      <div class="video-input-wrap">
+        <input class="video-url-input" id="vfield-${v.id}" placeholder="https://youtube.com/watch?v=..." value="${savedUrl}" />
+        <button class="video-save-btn" onclick="saveVideo('${v.id}')">Save</button>
+      </div>
+      <div class="video-error" id="verr-${v.id}" style="display:none">⚠ Paste a YouTube, Vimeo, or Loom share link</div>
+    </div>
+    ${embedUrl
+      ? `<div class="video-embed"><iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+      : savedUrl
+        ? `<a class="video-watch-btn" href="${savedUrl}" target="_blank" rel="noopener">▶ Watch Video</a>`
+        : `<div class="video-empty"><p>${icon} No video added yet</p><small>Click "+ Add Video" to add a YouTube, Vimeo, or Loom link</small></div>`
+    }
+  </div>`;
+}
+
+function toggleVideoEdit(id) {
+  const row = document.getElementById('vinput-'+id);
+  const btn = document.getElementById('veditbtn-'+id);
+  const showing = row.style.display !== 'none';
+  row.style.display = showing ? 'none' : 'block';
+  btn.classList.toggle('active', !showing);
+  btn.textContent = showing ? (state.videos[id] ? '✎ Edit' : '+ Add Video') : '✕ Cancel';
+}
+
+function saveVideo(id) {
+  const val = document.getElementById('vfield-'+id).value.trim();
+  const err = document.getElementById('verr-'+id);
+  if (val && !getEmbedUrl(val) && !val.startsWith('http')) {
+    err.style.display = 'block'; return;
+  }
+  err.style.display = 'none';
+  state.videos[id] = val;
+  saveState();
+  render();
+}
+
+// ── EXERCISE RENDERERS ────────────────────────────────────
+function renderExercise(ex) {
+  const saved = state.saved[ex.id];
+  switch(ex.type) {
+    case 'journal': return renderJournal(ex, saved);
+    case 'list5': return renderList5(ex, saved);
+    case 'fillblanks': return renderFillBlanks(ex, saved);
+    case 'completions': return renderCompletions(ex, saved);
+    case 'reframe': return renderReframe(ex, saved);
+    case 'declaration21': return renderDeclaration21(ex, saved);
+    case 'corevalues': return renderCoreValues(ex);
+    case 'mantras': return renderMantras(ex, saved);
+    case 'declaration': return renderDeclaration(ex, saved);
+    case 'nextstep': return renderNextStep(ex, saved);
+    default: return '';
+  }
+}
+
+function saveBtn(id) {
+  const saved = state.completed[id];
+  return `<button class="save-btn ${saved?'saved':''}" id="sbtn-${id}" onclick="saveEx('${id}')">${saved?'✦ Saved':'Save'}</button>`;
+}
+
+function renderJournal(ex, saved) {
+  return `
+    <p class="ex-prompt">${ex.prompt}</p>
+    ${ex.journalPrompt?`<p class="ex-journal-prompt">${ex.journalPrompt}</p>`:''}
+    <textarea class="ex-textarea" id="field-${ex.id}" rows="6" placeholder="Write here...">${saved||''}</textarea>
+    ${saveBtn(ex.id)}
+    ${ex.examples?renderExamples(ex.examples):''}`;
+}
+
+function renderList5(ex, saved) {
+  const vals = saved || ['','','','',''];
+  return `
+    <p class="ex-prompt">${ex.prompt}</p>
+    <div style="margin-top:14px">
+      ${vals.map((v,i)=>`
+        <div class="num-row">
+          <div class="num-badge">${i+1}</div>
+          <input class="ex-input" id="field-${ex.id}-${i}" value="${v}" placeholder="I am..." />
+        </div>`).join('')}
+    </div>
+    ${saveBtn(ex.id)}`;
+}
+
+function renderFillBlanks(ex, saved) {
+  const vals = saved || ['','',''];
+  return `
+    <p class="ex-prompt">${ex.prompt}</p>
+    <div class="fill-box">
+      <p class="fill-sentence">"The pattern I am done carrying into my next chapter is <em>_______</em> because it has cost me <em>_______</em> and I am now choosing <em>_______</em> instead."</p>
+      ${ex.fields.map((f,i)=>`
+        <div style="margin-bottom:10px">
+          <div class="fill-field-label">${f}</div>
+          <input class="ex-input" id="field-${ex.id}-${i}" value="${vals[i]||''}" placeholder="${f}..." />
+        </div>`).join('')}
+    </div>
+    ${saveBtn(ex.id)}`;
+}
+
+function renderCompletions(ex, saved) {
+  const vals = saved || ex.stems.map(()=>'');
+  return `
+    <p class="ex-prompt">${ex.prompt}</p>
+    <div style="margin-top:14px">
+      ${ex.stems.map((s,i)=>`
+        <div class="stem-row">
+          <span class="stem-label">${s}</span>
+          <input class="stem-input" id="field-${ex.id}-${i}" value="${vals[i]||''}" placeholder="..." />
+        </div>`).join('')}
+    </div>
+    ${saveBtn(ex.id)}`;
+}
+
+function renderReframe(ex, saved) {
+  const rows = saved || Array(5).fill(null).map(()=>({limiting:'',ideal:''}));
+  return `
+    <p class="ex-prompt">${ex.prompt}</p>
+    <div style="margin-top:14px">
+      <div class="reframe-header">
+        <div class="reframe-col-h" style="background:rgba(225,77,168,0.15);color:var(--mag)">Limiting Belief</div>
+        <div class="reframe-col-h" style="background:rgba(207,174,220,0.15);color:var(--lav)">Ideal Belief</div>
+      </div>
+      ${rows.map((r,i)=>`
+        <div class="reframe-row">
+          <input class="ex-input" id="field-${ex.id}-l-${i}" value="${r.limiting||''}" placeholder="Limiting belief ${i+1}..." style="border-color:rgba(225,77,168,0.2)" />
+          <input class="ex-input" id="field-${ex.id}-i-${i}" value="${r.ideal||''}" placeholder="Ideal belief ${i+1}..." style="border-color:rgba(207,174,220,0.2)" />
+        </div>`).join('')}
+    </div>
+    ${saveBtn(ex.id)}`;
+}
+
+function renderDeclaration21(ex, saved) {
+  const stmts = saved || ['','',''];
+  return `
+    <p class="ex-prompt">${ex.prompt}</p>
+    <div style="margin-top:14px">
+      ${stmts.map((s,i)=>`
+        <div class="num-row">
+          <div class="num-badge">0${i+1}</div>
+          <input class="ex-input" id="field-${ex.id}-${i}" value="${s||''}" placeholder="I AM..." />
+        </div>`).join('')}
+    </div>
+    <div class="hint-box">🎙️ Record yourself saying these out loud. Play it back every morning for 21 days.</div>
+    ${saveBtn(ex.id)}`;
+}
+
+function renderCoreValues(ex) {
+  const sel = state.values[ex.id] || [];
+  return `
+    <p class="ex-prompt">${ex.prompt}</p>
+    <div class="values-selected ${sel.length?'show':''}" id="valsel-${ex.id}">
+      <div class="values-selected-label">Selected (${sel.length}) ${sel.length>5?'— Top 5 highlighted':''}</div>
+      <div class="values-tags" id="valtags-${ex.id}">
+        ${sel.map((v,i)=>`<span class="value-tag ${i<5?'top5':'extra'}" onclick="toggleValue('${ex.id}','${v}')">${v}</span>`).join('')}
+      </div>
+    </div>
+    <div class="values-grid">
+      ${VALUES.map(v=>`<span class="value-chip ${sel.includes(v)?'selected':''}" id="vc-${ex.id}-${v.replace(/\s+/g,'_')}" onclick="toggleValue('${ex.id}','${v}')">${v}</span>`).join('')}
+    </div>
+    ${saveBtn(ex.id)}`;
+}
+
+function renderMantras(ex, saved) {
+  const mantras = saved || [...ex.defaults];
+  return `
+    <p class="ex-prompt">${ex.prompt}</p>
+    <div style="margin-top:14px">
+      ${mantras.map((m,i)=>`
+        <div class="mantra-row">
+          <span class="mantra-bullet">✦</span>
+          <input class="mantra-input" id="field-${ex.id}-${i}" value="${m||''}" />
+        </div>`).join('')}
+    </div>
+    <div class="hint-box lav">💜 Say them out loud right now. Record yourself. This is your daily practice.</div>
+    ${saveBtn(ex.id)}`;
+}
+
+function renderDeclaration(ex, saved) {
+  return `
+    <p class="ex-prompt">${ex.prompt}</p>
+    <p class="declaration-starter">Start with: ${ex.starter}</p>
+    <textarea class="ex-textarea" id="field-${ex.id}" rows="7" placeholder="I am a woman who...">${saved||'I am a woman who...'}</textarea>
+    ${saveBtn(ex.id)}`;
+}
+
+function renderNextStep(ex, saved) {
+  const vals = saved || ['',''];
+  return `
+    <p class="ex-prompt">${ex.prompt}</p>
+    <div class="fill-box">
+      <p class="fill-sentence">"I know that to fully become her I need to go deeper into <em>_______</em> and I am committing to <em>_______</em> as my next step."</p>
+      ${ex.fields.map((f,i)=>`
+        <div style="margin-bottom:10px">
+          <div class="fill-field-label">${f}</div>
+          <input class="ex-input" id="field-${ex.id}-${i}" value="${vals[i]||''}" placeholder="${f}..." />
+        </div>`).join('')}
+    </div>
+    ${ex.upsell?`<div class="upsell-box">✦ ${ex.upsell} ✦</div>`:''}
+    ${saveBtn(ex.id)}`;
+}
+
+function renderExamples(examples) {
+  return `
+    <button class="examples-toggle" onclick="toggleExamples(this)">▼ See examples</button>
+    <div class="examples-list" style="display:none">
+      ${examples.map(e=>`
+        <div class="example-item">
+          <div class="example-title">${e.title}</div>
+          <div class="example-body">${e.body}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ── SAVE HANDLERS ─────────────────────────────────────────
+function saveEx(id) {
+  const ex = DAYS.flatMap(d=>d.exercises).find(e=>e.id===id);
+  if (!ex) return;
+  let val;
+  switch(ex.type) {
+    case 'journal': case 'declaration':
+      val = document.getElementById('field-'+id)?.value; break;
+    case 'list5': case 'mantras': case 'declaration21':
+      val = [0,1,2,3,4].map(i=>document.getElementById('field-'+id+'-'+i)?.value||'').filter((_,i)=>ex.type==='list5'?i<5:i<(ex.type==='declaration21'?3:5)); break;
+    case 'fillblanks': case 'nextstep':
+      val = ex.fields.map((_,i)=>document.getElementById('field-'+id+'-'+i)?.value||''); break;
+    case 'completions':
+      val = ex.stems.map((_,i)=>document.getElementById('field-'+id+'-'+i)?.value||''); break;
+    case 'reframe':
+      val = Array(5).fill(null).map((_,i)=>({limiting:document.getElementById('field-'+id+'-l-'+i)?.value||'',ideal:document.getElementById('field-'+id+'-i-'+i)?.value||''})); break;
+    case 'corevalues':
+      val = state.values[id]||[]; break;
+    default: val = '';
+  }
+  state.saved[id] = val;
+  state.completed[id] = true;
+  saveState();
+  updateProgress();
+  const btn = document.getElementById('sbtn-'+id);
+  if (btn) { btn.textContent='✦ Saved'; btn.classList.add('saved'); }
+  const chk = document.getElementById('chk-'+id);
+  if (chk) { chk.textContent='✓'; chk.classList.add('done'); }
+}
+
+function toggleValue(exId, val) {
+  if (!state.values[exId]) state.values[exId]=[];
+  const idx = state.values[exId].indexOf(val);
+  if (idx>-1) state.values[exId].splice(idx,1);
+  else state.values[exId].push(val);
+  saveState();
+  // re-render just the values section
+  const ex = DAYS.flatMap(d=>d.exercises).find(e=>e.id===exId);
+  const body = document.getElementById('exbody-'+exId);
+  if (body) body.innerHTML = renderCoreValues(ex);
+}
+
+function toggleExamples(btn) {
+  const list = btn.nextElementSibling;
+  const open = list.style.display !== 'none';
+  list.style.display = open ? 'none' : 'flex';
+  btn.textContent = open ? '▼ See examples' : '▲ Hide examples';
+}
+
+// ── RENDER ────────────────────────────────────────────────
+function render() {
+  // tabs
+  const tabsEl = document.getElementById('day-tabs');
+  tabsEl.innerHTML = DAYS.map((d,i)=>{
+    const done = d.exercises.filter(e=>state.completed[e.id]).length;
+    return `<button class="day-tab ${activeDay===i?'active':''}" onclick="switchDay(${i})">
+      <div>${d.title}</div>
+      <div class="day-tab-sub">${done}/${d.exercises.length} done</div>
+    </button>`;
+  }).join('');
+
+  const day = DAYS[activeDay];
+  let html = '';
+
+  // day header
+  html += `
+  <div class="day-header">
+    <canvas id="day-canvas"></canvas>
+    <div class="day-header-inner">
+      <div class="day-eyebrow">${day.tag}</div>
+      <div class="day-title">${day.title} — <em>${day.subtitle}</em></div>
+      <div class="day-intro">${day.intro}</div>
+    </div>
+  </div>`;
+
+  // videos
+  html += `<div class="section-label video"><span>▶</span><span>Videos</span></div>`;
+  day.videos.forEach(v => { html += renderVideoPlayer(v); });
+
+  // exercises
+  html += `<div class="section-label exercise"><span>✦</span><span>Exercises</span></div>`;
+  day.exercises.forEach(ex => {
+    const isOpen = activeEx === ex.id;
+    const isDone = !!state.completed[ex.id];
+    html += `
+    <div class="ex-card ${isOpen?'open':''}" id="excard-${ex.id}">
+      <div class="ex-header" onclick="toggleEx('${ex.id}')">
+        <div class="ex-check ${isDone?'done':''}" id="chk-${ex.id}">${isDone?'✓':''}</div>
+        <div class="ex-title">${ex.title}</div>
+        <span class="ex-arrow">${isOpen?'▲':'▼'}</span>
+      </div>
+      ${isOpen?`<div class="ex-body"><div id="exbody-${ex.id}">${renderExercise(ex)}</div></div>`:''}
+    </div>`;
+  });
+
+  // nav
+  html += `<div class="day-nav">
+    ${activeDay>0?`<button class="nav-prev" onclick="switchDay(${activeDay-1})">← ${DAYS[activeDay-1].title}</button>`:''}
+    ${activeDay<DAYS.length-1?`<button class="nav-next" onclick="switchDay(${activeDay+1})">${DAYS[activeDay+1].title} →</button>`:''}
+  </div>`;
+
+  // completion
+  const totalEx = DAYS.reduce((a,d)=>a+d.exercises.length,0);
+  const doneCount = Object.keys(state.completed).filter(k=>state.completed[k]).length;
+  if (activeDay===2 && doneCount===totalEx) {
+    html += `
+    <div class="complete-card">
+      <canvas id="complete-canvas"></canvas>
+      <div class="complete-inner">
+        <div class="complete-accent">receive. trust. become.</div>
+        <div class="complete-title">You chose yourself,<br><em>Queen.</em></div>
+        <div class="complete-body">The Identity Detox is complete. You've surfaced the patterns, cleared the beliefs, and declared who you're becoming. She's already here.</div>
+        <div class="complete-sig">✦ Badass Alchemy · The Baddie Society ✦</div>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('main-content').innerHTML = html;
+
+  // draw stars
+  requestAnimationFrame(()=>{
+    const hc = document.getElementById('hero-canvas');
+    if (hc) drawStars(hc, 160);
+    const dc = document.getElementById('day-canvas');
+    if (dc) drawStars(dc, 60);
+    const cc = document.getElementById('complete-canvas');
+    if (cc) drawStars(cc, 120);
+  });
+
+  updateProgress();
+}
+
+function switchDay(i) {
+  activeDay = i;
+  activeEx = null;
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleEx(id) {
+  activeEx = activeEx === id ? null : id;
+  render();
+  // scroll to exercise
+  requestAnimationFrame(()=>{
+    const el = document.getElementById('excard-'+id);
+    if (el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+}
+
+// ── INIT ─────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
