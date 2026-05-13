@@ -206,8 +206,8 @@ const DAYS = [
     tag:"WHO AM I WITHOUT THE ARMOR?",
     intro:"Before we build the new, we have to see what's actually here. Not who you're supposed to be. Not who you've been performing as. Who you actually are — patterns, power, and all.",
     videos:[
-      {id:"d1-intro", type:"intro", label:"Day 1 Intro — Shedding the Survival Identity"},
-      {id:"d1-med", type:"meditation", label:"Day 1 Activation Meditation"},
+      {id:"d1-intro", type:"intro", label:"Day 1 Intro — Shedding the Survival Identity", hardcoded:"https://www.youtube.com/embed/0LOlMu80GAs"},
+      {id:"d1-med", type:"meditation", label:"Day 1 Activation Meditation", hardcoded:"https://www.youtube.com/embed/4-RdYeGBBAY"},
     ],
     exercises:[
       {id:"d1e1", title:"Exercise 1 — My Disempowering Patterns", type:"journal",
@@ -233,8 +233,8 @@ const DAYS = [
     tag:"WHAT'S REALLY STOPPING ME?",
     intro:"Your patterns are rooted in beliefs. And most of those beliefs were handed to you — by your family, your culture, your earliest experiences. Today we excavate them, test them, and start replacing them.",
     videos:[
-      {id:"d2-intro", type:"intro", label:"Day 2 Intro — The Belief Detox"},
-      {id:"d2-med", type:"meditation", label:"Day 2 Belief Clearing Meditation"},
+      {id:"d2-intro", type:"intro", label:"Day 2 Intro — The Belief Detox", hardcoded:"https://www.youtube.com/embed/rcPKgzeUDTk"},
+      {id:"d2-med", type:"meditation", label:"Day 2 Belief Clearing Meditation", hardcoded:"https://www.youtube.com/embed/M8mj-_rlIDQ"},
     ],
     exercises:[
       {id:"d2e1", title:"Exercise 1 — The Belief Excavation", type:"completions",
@@ -255,8 +255,8 @@ const DAYS = [
     tag:"WHO AM I BECOMING?",
     intro:"You've shed the old. You've cleared the beliefs. Now we build the new. This is where you stop trying to become her and start declaring that you already are.",
     videos:[
-      {id:"d3-intro", type:"intro", label:"Day 3 Intro — The Identity Activation"},
-      {id:"d3-med", type:"activation", label:"Final Activation — Your Higher Self Meditation"},
+      {id:"d3-intro", type:"intro", label:"Day 3 Intro — The Identity Activation", hardcoded:"https://www.youtube.com/embed/abDc-zlZ5S8"},
+      {id:"d3-med", type:"activation", label:"Final Activation — Your Higher Self Meditation", hardcoded:"https://www.youtube.com/embed/W-Y2n6tJtA0"},
     ],
     exercises:[
       {id:"d3e1", title:"Exercise 1 — My Top 5 Core Values", type:"corevalues",
@@ -336,7 +336,7 @@ const videoIcons = {intro:'🎬',meditation:'🧘‍♀️',activation:'✨'};
 
 function renderVideoPlayer(v) {
   const savedUrl = state.videos[v.id] || '';
-  const embedUrl = getEmbedUrl(savedUrl);
+  const embedUrl = v.hardcoded || getEmbedUrl(savedUrl);
   const icon = videoIcons[v.type]||'🎬';
   return `
   <div class="video-player" id="vp-${v.id}">
@@ -344,25 +344,11 @@ function renderVideoPlayer(v) {
       <span class="video-icon">${icon}</span>
       <div class="video-meta">
         <div class="video-meta-label">${v.label}</div>
-        ${savedUrl ? `<div class="video-meta-url" id="vurl-${v.id}">${savedUrl}</div>` : ''}
       </div>
-      <button class="video-edit-btn" onclick="toggleVideoEdit('${v.id}')" id="veditbtn-${v.id}">
-        ${savedUrl ? '✎ Edit' : '+ Add Video'}
-      </button>
-    </div>
-    <div class="video-input-row" id="vinput-${v.id}" style="display:none;border-top:1px solid var(--border)">
-      <div class="video-input-hint">Paste a YouTube, Vimeo, or Loom URL</div>
-      <div class="video-input-wrap">
-        <input class="video-url-input" id="vfield-${v.id}" placeholder="https://youtube.com/watch?v=..." value="${savedUrl}" />
-        <button class="video-save-btn" onclick="saveVideo('${v.id}')">Save</button>
-      </div>
-      <div class="video-error" id="verr-${v.id}" style="display:none">⚠ Paste a YouTube, Vimeo, or Loom share link</div>
     </div>
     ${embedUrl
       ? `<div class="video-embed"><iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
-      : savedUrl
-        ? `<a class="video-watch-btn" href="${savedUrl}" target="_blank" rel="noopener">▶ Watch Video</a>`
-        : `<div class="video-empty"><p>${icon} No video added yet</p><small>Click "+ Add Video" to add a YouTube, Vimeo, or Loom link</small></div>`
+      : `<div class="video-empty"><p>${icon} Video coming soon</p></div>`
     }
   </div>`;
 }
