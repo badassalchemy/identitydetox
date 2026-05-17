@@ -19,7 +19,9 @@
   --glow:radial-gradient(ellipse at 55% 60%,rgba(200,60,120,0.22),transparent 60%);
   --glow2:radial-gradient(ellipse at 25% 35%,rgba(100,30,90,0.28),transparent 55%);
 }
-body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--txtSec);min-height:100vh}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--txtSec);min-height:100vh;background-image:url('https://raw.githubusercontent.com/badassalchemy/imageassets/main/mainbackground1.jpg');background-size:cover;background-position:center top;background-attachment:fixed;background-repeat:no-repeat}
+body::before{content:'';position:fixed;inset:0;background:rgba(13,6,16,0.82);pointer-events:none;z-index:0}
+.progress-bar,.day-tabs,.main,.footer{position:relative;z-index:1}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:rgba(207,174,220,0.2)}
 input,textarea{color-scheme:dark;font-family:'Montserrat',sans-serif}
 button{cursor:pointer;font-family:'Montserrat',sans-serif}
